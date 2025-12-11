@@ -1,3 +1,4 @@
+// Correct imports ONLY
 import {
     getWeatherByCity,
     getForecastByCity,
@@ -12,6 +13,7 @@ import {
     getGradient
 } from "./weather.js";
 
+// DOM elements
 const cityInput = document.getElementById("city-input");
 const searchBtn = document.getElementById("search-btn");
 const locationBtn = document.getElementById("location-btn");
@@ -29,17 +31,18 @@ const iconEl = document.getElementById("weather-icon");
 const forecastContainer = document.getElementById("forecast");
 const sky = document.querySelector(".sky-gradient");
 
+// Load weather for chosen city
 async function loadWeather(city) {
     try {
         const weatherData = await getWeatherByCity(city);
         const forecastData = await getForecastByCity(city);
-
         updateUI(weatherData, forecastData);
     } catch {
         alert("City not found.");
     }
 }
 
+// Update UI
 function updateUI(weatherData, forecastData) {
     const today = formatTodayWeather(weatherData);
     const forecast = formatForecast(forecastData);
@@ -62,6 +65,7 @@ function updateUI(weatherData, forecastData) {
     sky.style.background = getGradient(theme);
 }
 
+// Render forecast cards
 function renderForecast(list) {
     forecastContainer.innerHTML = "";
 
@@ -83,16 +87,19 @@ function renderForecast(list) {
     });
 }
 
+// Search button
 searchBtn.addEventListener("click", () => {
     if (cityInput.value.trim()) loadWeather(cityInput.value.trim());
 });
 
+// Search on Enter
 cityInput.addEventListener("keydown", e => {
     if (e.key === "Enter" && cityInput.value.trim()) {
         loadWeather(cityInput.value.trim());
     }
 });
 
+// Use My Location
 locationBtn.addEventListener("click", () => {
     navigator.geolocation.getCurrentPosition(async pos => {
         const lat = pos.coords.latitude;
@@ -105,8 +112,10 @@ locationBtn.addEventListener("click", () => {
     });
 });
 
+// Helper
 function capitalize(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
+// Default city
 loadWeather("Winnipeg");
