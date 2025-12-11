@@ -1,43 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Weather App</title>
-
-    <link rel="stylesheet" href="css/style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animated Weather App</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-    <div class="app-container">
+    <!-- Animated Background Layers -->
+    <div id="background">
+        <div class="sky-gradient"></div>
+        <div class="cloud-layer cloud-back"></div>
+        <div class="cloud-layer cloud-front"></div>
+        <div class="rain-layer"></div>
+        <div class="stars-layer"></div>
+        <div class="fog-layer"></div>
+    </div>
 
-        <!-- Search Section -->
-        <div class="search-box">
-            <input 
-                id="cityInput" 
-                type="text" 
-                placeholder="Enter a city..."
-            />
-            <button id="searchBtn">Search</button>
+    <!-- Main App Container -->
+    <div id="app">
+
+        <!-- Search + Location -->
+        <div class="controls">
+            <input type="text" id="city-input" placeholder="Search city..." autocomplete="off">
+            <button id="search-btn">Search</button>
+            <button id="location-btn">Use My Location</button>
         </div>
 
-        <!-- Error Message -->
-        <p id="errorMessage" class="error hidden">
-            Unable to fetch weather data. Check the city name and try again.
-        </p>
+        <!-- Hero Section -->
+        <div class="weather-hero" id="weather-hero">
+            <img id="weather-icon" class="weather-icon" src="" alt="">
+            <div id="temperature" class="temperature">--°</div>
+            <div id="city-name" class="city-name">Loading...</div>
+            <div id="condition-text" class="condition-text">--</div>
+            <div class="high-low">
+                <span id="high-temp">H: --°</span>
+                <span id="low-temp">L: --°</span>
+            </div>
+        </div>
 
-        <!-- Weather Display -->
-        <div id="weatherDisplay" class="weather hidden">
-            <h2 id="cityName"></h2>
-            <p id="temperature"></p>
-            <p id="description"></p>
-            <p id="humidity"></p>
-            <p id="wind"></p>
+        <!-- Today's Details (Glass Panel) -->
+        <div class="details-card">
+            <div class="detail">
+                <h4>Humidity</h4>
+                <p id="humidity">--%</p>
+            </div>
+            <div class="detail">
+                <h4>Wind</h4>
+                <p id="wind">-- km/h</p>
+            </div>
+            <div class="detail">
+                <h4>Feels Like</h4>
+                <p id="feels-like">--°</p>
+            </div>
+            <div class="detail">
+                <h4>Pressure</h4>
+                <p id="pressure">-- hPa</p>
+            </div>
+        </div>
+
+        <!-- Five-Day Forecast -->
+        <div class="forecast" id="forecast">
+            <!-- JS will inject forecast cards -->
         </div>
 
     </div>
 
-    <!-- JS Modules -->
     <script src="js/api.js"></script>
     <script src="js/weather.js"></script>
     <script src="js/app.js"></script>
