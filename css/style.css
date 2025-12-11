@@ -1,21 +1,19 @@
-/* ------------------------------------------------------
-   RESET & BASE STYLE
------------------------------------------------------- */
+/* RESET */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
 }
 
 body {
     height: 100vh;
-    overflow-x: hidden;
     background: #000;
     color: white;
+    overflow-x: hidden;
 }
 
-/* Smooth fade-in for everything */
+/* MAIN CONTAINER */
 #app {
     animation: fadeIn 1s ease forwards;
     position: relative;
@@ -31,9 +29,7 @@ body {
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* ------------------------------------------------------
-   ANIMATED SKY BACKGROUNDS
------------------------------------------------------- */
+/* CLEAN SKY BACKGROUND */
 #background {
     position: fixed;
     inset: 0;
@@ -41,7 +37,6 @@ body {
     z-index: 1;
 }
 
-/* Base gradient (changes in JS dynamically) */
 .sky-gradient {
     position: absolute;
     inset: 0;
@@ -49,90 +44,7 @@ body {
     transition: background 1.5s ease;
 }
 
-/* CLOUD LAYERS */
-.cloud-layer {
-    position: absolute;
-    top: 0;
-    left: -200px;
-    width: 200%;
-    height: 100%;
-    background-repeat: repeat-x;
-    opacity: 0.4;
-    pointer-events: none;
-}
-
-.cloud-back {
-    background-image: url('https://i.imgur.com/9Qe7dQO.png');
-    animation: cloudMoveBack 70s linear infinite;
-}
-
-.cloud-front {
-    background-image: url('https://i.imgur.com/qIufhof.png');
-    animation: cloudMoveFront 45s linear infinite;
-}
-
-@keyframes cloudMoveBack {
-    from { transform: translateX(0); }
-    to { transform: translateX(-50%); }
-}
-
-@keyframes cloudMoveFront {
-    from { transform: translateX(0); }
-    to { transform: translateX(-50%); }
-}
-
-/* RAIN LAYER */
-.rain-layer {
-    position: absolute;
-    inset: 0;
-    background-image: url('https://i.imgur.com/9b0J7vK.png');
-    background-size: cover;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 1.2s ease;
-}
-
-.rain-active {
-    opacity: .45;
-    animation: rainMove 0.5s linear infinite;
-}
-
-@keyframes rainMove {
-    from { background-position: 0 0; }
-    to { background-position: -20px 100px; }
-}
-
-/* STARS LAYER */
-.stars-layer {
-    position: absolute;
-    inset: 0;
-    background-image: url('https://i.imgur.com/3RQeQ2C.png');
-    background-size: cover;
-    opacity: 0;
-    pointer-events: none;
-    animation: twinkle 6s infinite ease-in-out alternate;
-    transition: opacity 1.2s ease;
-}
-
-@keyframes twinkle {
-    from { opacity: 0.1; }
-    to { opacity: 0.4; }
-}
-
-/* FOG LAYER */
-.fog-layer {
-    position: absolute;
-    inset: 0;
-    background-image: url('https://i.imgur.com/K3pI6rj.png');
-    background-size: cover;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 1.2s ease;
-}
-
-/* ------------------------------------------------------
-   CONTROLS
------------------------------------------------------- */
+/* CONTROLS */
 .controls {
     margin-top: 20px;
     display: flex;
@@ -145,16 +57,14 @@ body {
     padding: 10px 14px;
     border-radius: 8px;
     border: none;
-    outline: none;
     font-size: 16px;
 }
 
 .controls button {
-    background: rgba(255, 255, 255, 0.2);
-    border: 1px solid rgba(255,255,255,0.3);
     padding: 10px 14px;
     border-radius: 8px;
-    font-size: 15px;
+    border: 1px solid rgba(255,255,255,0.3);
+    background: rgba(255,255,255,0.18);
     color: white;
     cursor: pointer;
     backdrop-filter: blur(6px);
@@ -165,9 +75,7 @@ body {
     background: rgba(255,255,255,0.35);
 }
 
-/* ------------------------------------------------------
-   HERO WEATHER SECTION
------------------------------------------------------- */
+/* HERO */
 .weather-hero {
     margin-top: 40px;
     animation: fadeUp 1s ease forwards;
@@ -181,13 +89,6 @@ body {
 .weather-icon {
     width: 130px;
     margin-bottom: 10px;
-    filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.3));
-    animation: iconFloat 4s ease-in-out infinite alternate;
-}
-
-@keyframes iconFloat {
-    from { transform: translateY(0px); }
-    to { transform: translateY(-8px); }
 }
 
 .temperature {
@@ -196,49 +97,37 @@ body {
 }
 
 .city-name {
-    margin-top: 5px;
     font-size: 32px;
-    font-weight: 400;
+    margin-top: 5px;
 }
 
 .condition-text {
-    margin-top: 5px;
     font-size: 20px;
     opacity: 0.85;
 }
 
-.high-low {
-    margin-top: 10px;
-    font-size: 18px;
-}
-
-/* ------------------------------------------------------
-   DETAILS CARD (GLASS)
------------------------------------------------------- */
+/* DETAILS CARD */
 .details-card {
-    margin: 30px auto 20px;
-    background: rgba(255,255,255,0.11);
+    margin-top: 30px;
+    background: rgba(255,255,255,0.12);
     padding: 20px;
     border-radius: 15px;
     backdrop-filter: blur(10px);
     display: flex;
     justify-content: space-between;
-    gap: 20px;
 }
 
-.details-card .detail h4 {
+.detail h4 {
     font-size: 14px;
     opacity: 0.85;
 }
 
-.details-card .detail p {
+.detail p {
     margin-top: 5px;
     font-size: 18px;
 }
 
-/* ------------------------------------------------------
-   5-DAY FORECAST
------------------------------------------------------- */
+/* FORECAST */
 .forecast {
     margin-top: 25px;
     display: flex;
@@ -269,12 +158,8 @@ body {
     margin-bottom: 5px;
 }
 
-/* ------------------------------------------------------
-   RESPONSIVE
------------------------------------------------------- */
+/* RESPONSIVE */
 @media (max-width: 600px) {
     .temperature { font-size: 65px; }
-    .city-name { font-size: 26px; }
     .details-card { flex-wrap: wrap; }
-    .forecast-card { width: 80px; }
 }
