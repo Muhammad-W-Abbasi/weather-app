@@ -3,44 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Animated Weather App</title>
+    <title>Weather App</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
 
-    <!-- Animated Background Layers -->
+<body>
     <div id="background">
         <div class="sky-gradient"></div>
-        <div class="cloud-layer cloud-back"></div>
-        <div class="cloud-layer cloud-front"></div>
-        <div class="rain-layer"></div>
-        <div class="stars-layer"></div>
-        <div class="fog-layer"></div>
     </div>
 
-    <!-- Main App Container -->
     <div id="app">
 
-        <!-- Search + Location -->
         <div class="controls">
-            <input type="text" id="city-input" placeholder="Search city..." autocomplete="off">
+            <input type="text" id="city-input" placeholder="Search city...">
             <button id="search-btn">Search</button>
             <button id="location-btn">Use My Location</button>
         </div>
 
-        <!-- Hero Section -->
-        <div class="weather-hero" id="weather-hero">
-            <img id="weather-icon" class="weather-icon" src="" alt="">
-            <div id="temperature" class="temperature">--°</div>
-            <div id="city-name" class="city-name">Loading...</div>
-            <div id="condition-text" class="condition-text">--</div>
+        <div class="weather-hero">
+            <img id="weather-icon" class="weather-icon" alt="">
+            <div class="temperature" id="temperature">--°</div>
+            <div class="city-name" id="city-name">Loading...</div>
+            <div class="condition-text" id="condition-text">--</div>
             <div class="high-low">
-                <span id="high-temp">H: --°</span>
+                <span id="high-temp">H: --°</span> • 
                 <span id="low-temp">L: --°</span>
             </div>
         </div>
 
-        <!-- Today's Details (Glass Panel) -->
         <div class="details-card">
             <div class="detail">
                 <h4>Humidity</h4>
@@ -60,16 +50,11 @@
             </div>
         </div>
 
-        <!-- Five-Day Forecast -->
-        <div class="forecast" id="forecast">
-            <!-- JS will inject forecast cards -->
-        </div>
-
+        <div id="forecast" class="forecast"></div>
     </div>
 
     <script src="js/api.js"></script>
     <script src="js/weather.js"></script>
     <script src="js/app.js"></script>
-
 </body>
 </html>
