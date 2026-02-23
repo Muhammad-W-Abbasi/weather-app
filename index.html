@@ -1,57 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Weather App</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style.css" />
 </head>
-
 <body>
-    <div id="background">
+    <div id="background" aria-hidden="true">
         <div class="sky-gradient"></div>
+        <div class="atmosphere-layer"></div>
     </div>
 
-    <div id="app">
+    <main id="app">
+        <section class="controls glass-card" aria-label="Search weather">
+            <div class="search-wrap">
+                <input type="text" id="city-input" placeholder="Search city..." autocomplete="off" />
+                <button id="search-btn" type="button">Search</button>
+            </div>
+            <button id="location-btn" type="button" class="location-btn">Use My Location</button>
+        </section>
 
-        <div class="controls">
-            <input type="text" id="city-input" placeholder="Search city...">
-            <button id="search-btn">Search</button>
-            <button id="location-btn">Use My Location</button>
-        </div>
-
-        <div class="weather-hero">
-            <img id="weather-icon" class="weather-icon" alt="">
-            <div class="temperature" id="temperature">--°</div>
+        <section class="weather-hero glass-card" aria-label="Current weather">
+            <p class="hero-date">Today</p>
+            <div class="hero-main">
+                <img id="weather-icon" class="weather-icon" alt="" />
+                <div class="temperature" id="temperature">--°</div>
+            </div>
             <div class="city-name" id="city-name">Loading...</div>
             <div class="condition-text" id="condition-text">--</div>
             <div class="high-low">
-                <span id="high-temp">H: --°</span> • 
+                <span id="high-temp">H: --°</span>
                 <span id="low-temp">L: --°</span>
             </div>
-        </div>
+        </section>
 
-        <div class="details-card">
-            <div class="detail">
+        <section class="details-card glass-card" aria-label="Weather details">
+            <article class="detail">
                 <h4>Humidity</h4>
                 <p id="humidity">--%</p>
-            </div>
-            <div class="detail">
+            </article>
+            <article class="detail">
                 <h4>Wind</h4>
                 <p id="wind">-- km/h</p>
-            </div>
-            <div class="detail">
+            </article>
+            <article class="detail">
                 <h4>Feels Like</h4>
                 <p id="feels-like">--°</p>
-            </div>
-            <div class="detail">
+            </article>
+            <article class="detail">
                 <h4>Pressure</h4>
                 <p id="pressure">-- hPa</p>
-            </div>
-        </div>
+            </article>
+        </section>
 
-        <div id="forecast" class="forecast"></div>
-    </div>
+        <section class="forecast-section" aria-label="Forecast">
+            <header class="forecast-header">
+                <h3>5-Day Forecast</h3>
+            </header>
+            <div id="forecast" class="forecast"></div>
+        </section>
+    </main>
 
     <script type="module" src="js/app.js"></script>
 </body>
