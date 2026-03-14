@@ -15,14 +15,16 @@
     <main id="app">
         <section class="controls glass-card" aria-label="Search weather">
             <div class="search-wrap">
+                <label class="sr-only" for="city-input">Search by city name</label>
                 <input type="text" id="city-input" placeholder="Search city..." autocomplete="off" />
                 <button id="search-btn" type="button">Search</button>
             </div>
             <button id="location-btn" type="button" class="location-btn">Use My Location</button>
+            <p id="status-message" class="status-message" role="status" aria-live="polite"></p>
         </section>
 
         <section class="weather-hero glass-card" aria-label="Current weather">
-            <p class="hero-date">Today</p>
+            <p class="hero-date" id="hero-date">Today</p>
             <div class="hero-main">
                 <img id="weather-icon" class="weather-icon" alt="" />
                 <div class="temperature" id="temperature">--°</div>

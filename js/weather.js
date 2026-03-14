@@ -1,36 +1,42 @@
 export function formatTodayWeather(data) {
+    const primaryWeather = data.weather[0];
+
     return {
         city: data.name,
-        description: data.weather[0].description,
+        description: primaryWeather.description,
         temperature: Math.round(data.main.temp),
         high: Math.round(data.main.temp_max),
         low: Math.round(data.main.temp_min),
         humidity: data.main.humidity,
         wind: Math.round(data.wind.speed),
-        feels_like: Math.round(data.main.feels_like),
+        feelsLike: Math.round(data.main.feels_like),
         pressure: data.main.pressure,
-        icon: `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`,
-        weatherCode: data.weather[0].id
+        icon: `https://openweathermap.org/img/wn/${primaryWeather.icon}@2x.png`,
+        iconAlt: primaryWeather.description,
+        weatherCode: primaryWeather.id
     };
 }
 
 export function formatForecast(forecast) {
-    const daily = [];
-    const usedDays = new Set();
+    const dailyForecast = [];
+    const seenDates = new Set();
 
-    for (let entry of forecast.list) {
+    for (const entry of forecast.list) {
         const date = entry.dt_txt.split(" ")[0];
-        if (!usedDays.has(date) && daily.length < 5) {
-            daily.push({
+
+        if (!seenDates.has(date) && dailyForecast.length < 5) {
+            dailyForecast.push({
                 date,
                 temp: Math.round(entry.main.temp),
-                icon: `https://openweathermap.org/img/wn/${entry.weather[0].icon}.png`
+                icon: `https://openweathermap.org/img/wn/${entry.weather[0].icon}.png`,
+                iconAlt: entry.weather[0].description,
             });
-            usedDays.add(date);
+
+            seenDates.add(date);
         }
     }
 
-    return daily;
+    return dailyForecast;
 }
 
 export function getSkyTheme(code) {

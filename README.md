@@ -1,57 +1,42 @@
 # Weather Application
 
-A clean, modular weather application built with HTML, CSS, and JavaScript using the OpenWeather REST API.  
-Designed to demonstrate asynchronous logic, structured error handling, and separation of concerns through a multi-file architecture.
+A weather application built with HTML, CSS, and modular JavaScript using the OpenWeather API.
 
----
-
-## Features
-
-- Search weather by city name  
-- Real-time temperature, humidity, wind speed, and conditions  
-- Clean UI with smooth animations  
-- API integration using async/await  
-- Error handling for invalid or unknown city names  
-- Modular JavaScript structure for readability and maintainability  
-
----
+This project is designed to showcase:
+- asynchronous API integration with `fetch` and `async/await`
+- separation of concerns across API, formatting, and UI logic
+- responsive UI implementation without a framework
+- practical error handling for user-driven weather searches
 
 ## Live Demo
 
-Hosted on Netlify:  
-https://wamiq-weather.netlify.app/
+[https://wamiq-weather.netlify.app/](https://wamiq-weather.netlify.app/)
 
----
+## Features
 
-## GitHub Repository
+- search weather by city name
+- load weather using the browser's current location
+- display current temperature, condition, high/low, humidity, wind, feels-like temperature, and pressure
+- show a 5-day forecast
+- apply a dynamic background gradient based on current weather conditions
+- surface loading and error feedback directly in the interface
 
-https://github.com/Muhammad-W-Abbasi/weather-app.git
+## Tech Stack
 
----
-
-## Technologies Used
-
-- HTML5  
-- CSS3  
-- JavaScript (ES6+)  
-- OpenWeather REST API  
-- Asynchronous programming (async/await)  
-- Netlify (Deployment)  
-
----
+- HTML5
+- CSS3
+- JavaScript (ES modules)
+- OpenWeather API
 
 ## Project Structure
 
-- `index.html` – Main application layout  
-- `css/style.css` – UI styling and animation  
-- `js/api.js` – API request handler (`fetchWeather()`)  
-- `js/weather.js` – Data formatter for clean UI output  
-- `js/app.js` – DOM events, rendering logic, and error handling  
-- `README.md` – Project documentation  
+- [index.html](/Users/wamiqabbasi/Documents/Playground/weather-app/index.html): application layout and UI regions
+- [css/style.css](/Users/wamiqabbasi/Documents/Playground/weather-app/css/style.css): responsive styling, glassmorphism treatment, and motion
+- [js/api.js](/Users/wamiqabbasi/Documents/Playground/weather-app/js/api.js): API request helpers and response validation
+- [js/weather.js](/Users/wamiqabbasi/Documents/Playground/weather-app/js/weather.js): data formatting and theme mapping utilities
+- [js/app.js](/Users/wamiqabbasi/Documents/Playground/weather-app/js/app.js): event handling, async UI flow, and rendering
 
----
-
-## How to Run Locally
+## Run Locally
 
 1. Clone the repository:
 
@@ -59,30 +44,28 @@ https://github.com/Muhammad-W-Abbasi/weather-app.git
 git clone https://github.com/Muhammad-W-Abbasi/weather-app.git
 ```
 
-2. Open `index.html` in your browser.  
-No server or build tools required.
+2. Open [index.html](/Users/wamiqabbasi/Documents/Playground/weather-app/index.html) in a browser.
 
+No build step or dev server is required.
 
-## API Usage
+## API Notes
 
-This project uses the OpenWeather API.  
-The API key is stored in `js/api.js` for modularity:
+This project uses the OpenWeather API.
 
-```javascript
-const API_KEY = "YOUR_API_KEY";
-```
+The app currently supports a runtime configuration override through `window.WEATHER_APP_CONFIG.openWeatherApiKey` before the main app script runs.
 
-## Future Enhancements
+The current implementation still includes a fallback client-side key because this project is deployed as a static frontend and is intended to work without a backend. That preserves ease of review and local setup, but it is not a secure way to protect a third-party secret.
 
-- 5-day forecast view  
-- Geolocation-based weather (current location)  
-- Weather icons and illustrations  
-- Light/dark theme toggle  
-- Saved search history  
-- Temperature unit toggle (Celsius / Fahrenheit)  
+For a production-grade version, weather requests should be proxied through a backend or serverless function so the API key is never exposed in client code.
 
----
+## Engineering Notes
 
-## Notes
+- API access is centralized in a single module instead of being duplicated in UI code.
+- Weather display formatting is separated from DOM rendering logic.
+- Search and geolocation flows share the same loading and rendering pipeline, which keeps behavior more consistent and easier to maintain.
 
-This project emphasizes clean architecture through separation of API logic, formatting logic, and UI rendering.  
+## Remaining Technical Debt
+
+- The fallback API key is still client-exposed because the project is framework-free and fully static.
+- There is no automated test setup.
+- The app currently supports metric units only.

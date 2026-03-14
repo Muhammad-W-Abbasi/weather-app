@@ -1,121 +1,183 @@
-// Correct imports ONLY
 import {
-    getWeatherByCity,
     getForecastByCity,
+    getForecastByCoords,
+    getWeatherByCity,
     getWeatherByCoords,
-    getForecastByCoords
 } from "./api.js";
-
 import {
-    formatTodayWeather,
     formatForecast,
+    formatTodayWeather,
+    getGradient,
     getSkyTheme,
-    getGradient
 } from "./weather.js";
 
-// DOM elements
-const cityInput = document.getElementById("city-input");
-const searchBtn = document.getElementById("search-btn");
-const locationBtn = document.getElementById("location-btn");
+const DEFAULT_CITY = "Winnipeg";
 
-const tempEl = document.getElementById("temperature");
-const cityEl = document.getElementById("city-name");
-const conditionEl = document.getElementById("condition-text");
-const highEl = document.getElementById("high-temp");
-const lowEl = document.getElementById("low-temp");
-const humidityEl = document.getElementById("humidity");
-const windEl = document.getElementById("wind");
-const feelsEl = document.getElementById("feels-like");
-const pressureEl = document.getElementById("pressure");
-const iconEl = document.getElementById("weather-icon");
-const forecastContainer = document.getElementById("forecast");
-const sky = document.querySelector(".sky-gradient");
+const elements = {
+    cityInput: document.getElementById("city-input"),
+    searchButton: document.getElementById("search-btn"),
+    locationButton: document.getElementById("location-btn"),
+    statusMessage: document.getElementById("status-message"),
+    heroDate: document.getElementById("hero-date"),
+    temperature: document.getElementById("temperature"),
+    cityName: document.getElementById("city-name"),
+    conditionText: document.getElementById("condition-text"),
+    highTemp: document.getElementById("high-temp"),
+    lowTemp: document.getElementById("low-temp"),
+    humidity: document.getElementById("humidity"),
+    wind: document.getElementById("wind"),
+    feelsLike: document.getElementById("feels-like"),
+    pressure: document.getElementById("pressure"),
+    weatherIcon: document.getElementById("weather-icon"),
+    forecast: document.getElementById("forecast"),
+    skyGradient: document.querySelector(".sky-gradient"),
+};
 
-// Load weather for chosen city
-async function loadWeather(city) {
-    try {
-        const weatherData = await getWeatherByCity(city);
-        const forecastData = await getForecastByCity(city);
-        updateUI(weatherData, forecastData);
-    } catch {
-        alert("City not found.");
-    }
+function setStatusMessage(message = "", type = "info") {
+    elements.statusMessage.textContent = message;
+    elements.statusMessage.dataset.state = message ? type : "";
 }
 
-// Update UI
-function updateUI(weatherData, forecastData) {
-    const today = formatTodayWeather(weatherData);
+function setLoadingState(isLoading) {
+    elements.searchButton.disabled = isLoading;
+    elements.locationButton.disabled = isLoading;
+    elements.searchButton.textContent = isLoading ? "Searching..." : "Search";
+    elements.locationButton.textContent = isLoading ? "Locating..." : "Use My Location";
+}
+
+function formatDisplayDate(date = new Date()) {
+    return new Intl.DateTimeFormat("en-US", {
+        weekday: "long",
+        month: "short",
+        day: "numeric",
+    }).format(date);
+}
+
+function capitalizeFirstLetter(value) {
+    if (!value) {
+        return "";
+    }
+
+    return value.charAt(0).toUpperCase() + value.slice(1);
+}
+
+function renderForecast(forecastDays) {
+    elements.forecast.innerHTML = "";
+
+    forecastDays.forEach((day, index) => {
+        const forecastCard = document.createElement("article");
+        forecastCard.className = "forecast-card";
+        forecastCard.style.setProperty("--delay", `${index * 0.15}s`);
+
+        const weekday = new Date(day.date).toLocaleDateString("en-US", { weekday: "short" });
+
+        const dayLabel = document.createElement("h4");
+        dayLabel.textContent = weekday;
+
+        const icon = document.createElement("img");
+        icon.src = day.icon;
+        icon.alt = capitalizeFirstLetter(day.iconAlt);
+
+        const temperature = document.createElement("p");
+        temperature.textContent = `${day.temp}°`;
+
+        forecastCard.append(dayLabel, icon, temperature);
+
+        elements.forecast.appendChild(forecastCard);
+    });
+}
+
+function updateWeatherUI(weatherData, forecastData) {
+    const currentWeather = formatTodayWeather(weatherData);
     const forecast = formatForecast(forecastData);
 
-    tempEl.textContent = `${today.temperature}°`;
-    cityEl.textContent = today.city;
-    conditionEl.textContent = capitalize(today.description);
-    highEl.textContent = `H: ${today.high}°`;
-    lowEl.textContent = `L: ${today.low}°`;
-    humidityEl.textContent = `${today.humidity}%`;
-    windEl.textContent = `${today.wind} km/h`;
-    feelsEl.textContent = `${today.feels_like}°`;
-    pressureEl.textContent = `${today.pressure} hPa`;
+    elements.heroDate.textContent = formatDisplayDate();
+    elements.temperature.textContent = `${currentWeather.temperature}°`;
+    elements.cityName.textContent = currentWeather.city;
+    elements.conditionText.textContent = capitalizeFirstLetter(currentWeather.description);
+    elements.highTemp.textContent = `H: ${currentWeather.high}°`;
+    elements.lowTemp.textContent = `L: ${currentWeather.low}°`;
+    elements.humidity.textContent = `${currentWeather.humidity}%`;
+    elements.wind.textContent = `${currentWeather.wind} km/h`;
+    elements.feelsLike.textContent = `${currentWeather.feelsLike}°`;
+    elements.pressure.textContent = `${currentWeather.pressure} hPa`;
 
-    iconEl.src = today.icon;
+    elements.weatherIcon.src = currentWeather.icon;
+    elements.weatherIcon.alt = capitalizeFirstLetter(currentWeather.iconAlt);
 
     renderForecast(forecast);
 
-    const theme = getSkyTheme(today.weatherCode);
-    sky.style.background = getGradient(theme);
+    const weatherTheme = getSkyTheme(currentWeather.weatherCode);
+    elements.skyGradient.style.background = getGradient(weatherTheme);
 }
 
-// Render forecast cards
-function renderForecast(list) {
-    forecastContainer.innerHTML = "";
+async function loadWeatherData(fetchWeather, fetchForecast) {
+    setLoadingState(true);
+    setStatusMessage("Loading weather data...");
 
-    list.forEach((day, i) => {
-        const el = document.createElement("div");
-        el.className = "forecast-card";
-        el.style.setProperty("--delay", `${i * 0.15}s`);
+    try {
+        const [weatherData, forecastData] = await Promise.all([
+            fetchWeather(),
+            fetchForecast(),
+        ]);
 
-        const date = new Date(day.date);
-        const weekday = date.toLocaleDateString("en-US", { weekday: "short" });
-
-        el.innerHTML = `
-            <h4>${weekday}</h4>
-            <img src="${day.icon}" alt="">
-            <p>${day.temp}°</p>
-        `;
-
-        forecastContainer.appendChild(el);
-    });
+        updateWeatherUI(weatherData, forecastData);
+        setStatusMessage("");
+    } catch (error) {
+        setStatusMessage(error.message || "Unable to load weather data.", "error");
+    } finally {
+        setLoadingState(false);
+    }
 }
 
-// Search button
-searchBtn.addEventListener("click", () => {
-    if (cityInput.value.trim()) loadWeather(cityInput.value.trim());
-});
+function handleCitySearch() {
+    const city = elements.cityInput.value.trim();
 
-// Search on Enter
-cityInput.addEventListener("keydown", e => {
-    if (e.key === "Enter" && cityInput.value.trim()) {
-        loadWeather(cityInput.value.trim());
+    if (!city) {
+        setStatusMessage("Enter a city name to search.", "error");
+        elements.cityInput.focus();
+        return;
+    }
+
+    loadWeatherData(
+        () => getWeatherByCity(city),
+        () => getForecastByCity(city)
+    );
+}
+
+function loadWeatherByLocation() {
+    if (!navigator.geolocation) {
+        setStatusMessage("Geolocation is not supported in this browser.", "error");
+        return;
+    }
+
+    setLoadingState(true);
+    setStatusMessage("Getting your location...");
+
+    navigator.geolocation.getCurrentPosition(
+        async ({ coords }) => {
+            await loadWeatherData(
+                () => getWeatherByCoords(coords.latitude, coords.longitude),
+                () => getForecastByCoords(coords.latitude, coords.longitude)
+            );
+        },
+        () => {
+            setLoadingState(false);
+            setStatusMessage("We couldn't access your location. Please search by city instead.", "error");
+        },
+        { enableHighAccuracy: true, timeout: 10000 }
+    );
+}
+
+elements.searchButton.addEventListener("click", handleCitySearch);
+elements.cityInput.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+        handleCitySearch();
     }
 });
+elements.locationButton.addEventListener("click", loadWeatherByLocation);
 
-// Use My Location
-locationBtn.addEventListener("click", () => {
-    navigator.geolocation.getCurrentPosition(async pos => {
-        const lat = pos.coords.latitude;
-        const lon = pos.coords.longitude;
-
-        const weatherData = await getWeatherByCoords(lat, lon);
-        const forecastData = await getForecastByCoords(lat, lon);
-
-        updateUI(weatherData, forecastData);
-    });
-});
-
-// Helper
-function capitalize(str) {
-    return str.charAt(0).toUpperCase() + str.slice(1);
-}
-
-// Default city
-loadWeather("Winnipeg");
+loadWeatherData(
+    () => getWeatherByCity(DEFAULT_CITY),
+    () => getForecastByCity(DEFAULT_CITY)
+);
