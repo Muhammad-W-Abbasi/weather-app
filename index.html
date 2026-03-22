@@ -3,66 +3,221 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Weather App</title>
+    <title>Wamiq's Weather Forecast | Weather Dashboard</title>
+    <meta name="description" content="A cinematic weather dashboard with live conditions, hourly forecast, and five-day outlook." />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' x2='1' y1='0' y2='1'%3E%3Cstop stop-color='%237fafff'/%3E%3Cstop offset='1' stop-color='%23fd9d06'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='32' cy='32' r='30' fill='url(%23g)'/%3E%3Cpath d='M20 38c0-6 4-10 10-10 3 0 6 1 8 4 1-1 3-2 5-2 5 0 9 4 9 9s-4 9-9 9H23c-5 0-9-4-9-9s3-8 6-9c0-1 0-1 0-2z' fill='white' fill-opacity='.9'/%3E%3C/svg%3E" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
+    <div class="grain" aria-hidden="true"></div>
     <div id="background" aria-hidden="true">
-        <div class="sky-gradient"></div>
+        <div class="weather-bg sky-gradient"></div>
         <div class="atmosphere-layer"></div>
     </div>
 
-    <main id="app">
-        <section class="controls glass-card" aria-label="Search weather">
-            <div class="search-wrap">
-                <label class="sr-only" for="city-input">Search by city name</label>
-                <input type="text" id="city-input" placeholder="Search city..." autocomplete="off" />
-                <button id="search-btn" type="button">Search</button>
-            </div>
+    <header class="topbar glass-card">
+        <div class="brand">
+            <span class="brand-title">Wamiq's Weather Forecast</span>
+        </div>
+
+        <div class="search-panel">
+            <label class="sr-only" for="city-input">Search for a city</label>
+            <input type="text" id="city-input" placeholder="Search for a city..." autocomplete="off" />
+            <button id="search-btn" type="button">Search</button>
+        </div>
+
+        <div class="topbar-actions">
             <button id="location-btn" type="button" class="location-btn">Use My Location</button>
-            <p id="status-message" class="status-message" role="status" aria-live="polite"></p>
+        </div>
+    </header>
+
+    <main id="app">
+        <section class="weather-hero" aria-label="Current weather">
+            <div class="hero-copy">
+                <p class="hero-date" id="hero-date">Today</p>
+                <div class="city-name" id="city-name">Loading...</div>
+                <div class="temperature-stack">
+                    <div class="temperature" id="temperature">--°</div>
+                    <span class="temperature-unit">C</span>
+                </div>
+                <div class="hero-meta">
+                    <p class="condition-text" id="condition-text">--</p>
+                    <p>
+                        <span id="high-temp">H: --°</span>
+                        <span id="low-temp">L: --°</span>
+                    </p>
+                </div>
+                <p id="status-message" class="status-message" role="status" aria-live="polite"></p>
+            </div>
+
+            <div class="hero-illustration" aria-hidden="true">
+                <div class="sun-glow"></div>
+                <div class="cloud cloud-left"></div>
+                <div class="cloud cloud-right"></div>
+                <img id="weather-icon" class="weather-icon hero-icon" alt="" />
+            </div>
         </section>
 
-        <section class="weather-hero glass-card" aria-label="Current weather">
-            <p class="hero-date" id="hero-date">Today</p>
-            <div class="hero-main">
-                <img id="weather-icon" class="weather-icon" alt="" />
-                <div class="temperature" id="temperature">--°</div>
-            </div>
-            <div class="city-name" id="city-name">Loading...</div>
-            <div class="condition-text" id="condition-text">--</div>
-            <div class="high-low">
-                <span id="high-temp">H: --°</span>
-                <span id="low-temp">L: --°</span>
-            </div>
-        </section>
-
-        <section class="details-card glass-card" aria-label="Weather details">
-            <article class="detail">
-                <h4>Humidity</h4>
-                <p id="humidity">--%</p>
-            </article>
-            <article class="detail">
-                <h4>Wind</h4>
-                <p id="wind">-- km/h</p>
-            </article>
-            <article class="detail">
+        <section class="details-card" aria-label="Quick weather details">
+            <article class="detail glass-pill">
                 <h4>Feels Like</h4>
                 <p id="feels-like">--°</p>
             </article>
-            <article class="detail">
+            <article class="detail glass-pill">
+                <h4>Humidity</h4>
+                <p id="humidity">--%</p>
+            </article>
+            <article class="detail glass-pill">
+                <h4>Wind</h4>
+                <p id="wind">-- km/h</p>
+            </article>
+            <article class="detail glass-pill">
                 <h4>Pressure</h4>
                 <p id="pressure">-- hPa</p>
             </article>
         </section>
 
-        <section class="forecast-section" aria-label="Forecast">
+        <section class="forecast-section hourly-section" aria-label="Hourly forecast">
             <header class="forecast-header">
-                <h3>5-Day Forecast</h3>
+                <h3>Hourly Forecast</h3>
+                <p>Next 24 Hours</p>
             </header>
-            <div id="forecast" class="forecast"></div>
+            <div id="hourly-forecast" class="hourly-forecast"></div>
+        </section>
+
+        <section class="dashboard-grid" aria-label="Forecast and weather details">
+            <section class="forecast-panel glass-card">
+                <header class="forecast-header">
+                    <h3>5-Day Forecast</h3>
+                    <p>Mapped from your original forecast feed</p>
+                </header>
+                <div id="forecast" class="forecast"></div>
+                <div class="forecast-summary">
+                    <div class="summary-header">
+                        <h4>Forecast Notes</h4>
+                        <p>Extra context from the same feed</p>
+                    </div>
+                    <div class="summary-grid">
+                        <article class="summary-stat">
+                            <span>Daylight</span>
+                            <strong id="daylight-duration">--h --m</strong>
+                            <p>Time between sunrise and sunset today.</p>
+                        </article>
+                        <article class="summary-stat">
+                            <span>Rain Chance</span>
+                            <strong id="rain-chance">--%</strong>
+                            <p>Highest precipitation probability in the next day.</p>
+                        </article>
+                        <article class="summary-stat">
+                            <span>Cloud Cover</span>
+                            <strong id="cloud-cover">--%</strong>
+                            <p>Average sky cover across the next forecast blocks.</p>
+                        </article>
+                        <article class="summary-stat">
+                            <span>Location</span>
+                            <strong id="geo-coords">--, --</strong>
+                            <p>Current coordinates for this weather snapshot.</p>
+                        </article>
+                    </div>
+                </div>
+            </section>
+
+            <section class="info-grid">
+                <article class="info-card glass-card">
+                    <header class="forecast-header">
+                        <h3>Sunrise & Sunset</h3>
+                        <p>Local solar time</p>
+                    </header>
+                    <div class="sun-arc" aria-hidden="true">
+                        <svg class="sun-arc-svg" viewBox="0 0 240 120" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+                            <defs>
+                                <linearGradient id="sunrise-sunset-gradient" x1="20" y1="100" x2="220" y2="100" gradientUnits="userSpaceOnUse">
+                                    <stop offset="0%" stop-color="#69a8ff"></stop>
+                                    <stop offset="100%" stop-color="#fd9d06"></stop>
+                                </linearGradient>
+                            </defs>
+                            <path
+                                class="sun-arc-line"
+                                d="M 20 100 A 100 100 0 0 1 220 100"
+                                pathLength="100"
+                            ></path>
+                            <path
+                                id="sun-arc-progress"
+                                class="sun-arc-progress"
+                                d="M 20 100 A 100 100 0 0 1 220 100"
+                                pathLength="100"
+                            ></path>
+                            <circle id="sun-dot" class="sun-dot" cx="120" cy="0" r="7"></circle>
+                        </svg>
+                    </div>
+                    <div class="split-stats">
+                        <div>
+                            <span>Sunrise</span>
+                            <strong id="sunrise">--:--</strong>
+                        </div>
+                        <div>
+                            <span>Sunset</span>
+                            <strong id="sunset">--:--</strong>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="info-card glass-card">
+                    <header class="forecast-header">
+                        <h3>Visibility</h3>
+                        <p>Current observation</p>
+                    </header>
+                    <div class="metric-stack">
+                        <strong id="visibility">-- km</strong>
+                        <p id="visibility-text">Waiting for live weather data.</p>
+                    </div>
+                </article>
+
+                <article class="info-card glass-card">
+                    <header class="forecast-header">
+                        <h3>Precipitation</h3>
+                        <p>Next 24 hours</p>
+                    </header>
+                    <div class="metric-stack">
+                        <strong id="precipitation">0.0 mm</strong>
+                        <p id="precipitation-text">Estimated from the next 8 forecast blocks.</p>
+                    </div>
+                </article>
+
+                <article class="info-card glass-card">
+                    <header class="forecast-header">
+                        <h3>Atmosphere</h3>
+                        <p>Pressure and comfort</p>
+                    </header>
+                    <div class="metric-list">
+                        <div>
+                            <span>Pressure</span>
+                            <strong id="atmosphere-pressure">-- hPa</strong>
+                        </div>
+                        <div>
+                            <span>Feels Like</span>
+                            <strong id="atmosphere-feels-like">--°</strong>
+                        </div>
+                        <div>
+                            <span>Wind</span>
+                            <strong id="atmosphere-wind">-- km/h</strong>
+                        </div>
+                    </div>
+                </article>
+            </section>
         </section>
     </main>
+
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="https://openweathermap.org/" target="_blank" rel="noreferrer">Data Source</a>
+            <a href="https://www.netlify.com/" target="_blank" rel="noreferrer">Deploy on Netlify</a>
+        </div>
+        <div id="footer-location">Weather for Winnipeg • Wamiq's Weather Forecast © 2026</div>
+    </footer>
 
     <script type="module" src="js/app.js"></script>
 </body>

@@ -1,10 +1,8 @@
 const BASE_URL = "https://api.openweathermap.org/data/2.5";
+const GEO_URL = "https://api.openweathermap.org/geo/1.0";
 const DEFAULT_UNITS = "metric";
 const RUNTIME_CONFIG = globalThis.WEATHER_APP_CONFIG ?? {};
 
-// A static frontend cannot fully protect third-party API keys.
-// Prefer a backend or serverless proxy in production; this runtime override
-// at least avoids hard-requiring the key to be committed in source.
 const API_KEY = RUNTIME_CONFIG.openWeatherApiKey || "2b92dc5d53890ef7b0ded6cf2e0244f0";
 
 async function fetchWeatherData(endpoint, params) {
@@ -44,4 +42,25 @@ export function getWeatherByCoords(lat, lon) {
 
 export function getForecastByCoords(lat, lon) {
     return fetchWeatherData("forecast", { lat, lon });
+}
+
+export async function getLocationNameByCoords(lat, lon) {
+    if (!API_KEY) {
+        throw new Error("Weather service is not configured.");
+    }
+
+    const searchParams = new URLSearchParams({
+        lat,
+        lon,
+        limit: 5,
+        appid: API_KEY,
+    });
+
+    const response = await fetch(`${GEO_URL}/reverse?${searchParams.toString()}`);
+
+    if (!response.ok) {
+        throw new Error("Unable to resolve your current location name.");
+    }
+
+    return response.json();
 }
