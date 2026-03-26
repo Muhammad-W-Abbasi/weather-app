@@ -30,11 +30,11 @@ This project is designed to showcase:
 
 ## Project Structure
 
-- [index.html](/Users/wamiqabbasi/Documents/Playground/weather-app/index.html): application layout and UI regions
-- [css/style.css](/Users/wamiqabbasi/Documents/Playground/weather-app/css/style.css): responsive styling, glassmorphism treatment, and motion
-- [js/api.js](/Users/wamiqabbasi/Documents/Playground/weather-app/js/api.js): API request helpers and response validation
-- [js/weather.js](/Users/wamiqabbasi/Documents/Playground/weather-app/js/weather.js): data formatting and theme mapping utilities
-- [js/app.js](/Users/wamiqabbasi/Documents/Playground/weather-app/js/app.js): event handling, async UI flow, and rendering
+- `index.html`: application layout and UI regions
+- `css/style.css`: responsive styling, glassmorphism treatment, and motion
+- `js/api.js`: API request helpers and response validation
+- `js/weather.js`: data formatting and theme mapping utilities
+- `js/app.js`: event handling, async UI flow, and rendering
 
 ## Run Locally
 
@@ -44,7 +44,7 @@ This project is designed to showcase:
 git clone https://github.com/Muhammad-W-Abbasi/weather-app.git
 ```
 
-2. Open [index.html](/Users/wamiqabbasi/Documents/Playground/weather-app/index.html) in a browser.
+2. Open `index.html` in a browser.
 
 No build step or dev server is required.
 
